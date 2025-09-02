@@ -15,6 +15,7 @@ class SearchEngine(enum.Enum):
     BRAVE_SEARCH = "brave_search"
     ARXIV = "arxiv"
     WIKIPEDIA = "wikipedia"
+    FEEDCOOP = "feedcoop"
 
 
 # Tool configuration
