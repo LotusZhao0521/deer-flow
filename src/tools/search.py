@@ -22,6 +22,8 @@ from src.tools.decorators import create_logged_tool
 from src.tools.tavily_search.tavily_search_results_with_images import (
     TavilySearchWithImages,
 )
+from src.tools.feedcoop_search.feedcoop_search_results import FeedcoopSearch
+from src.tools.feedcoop_search.feedcoop_search_wrapper import FeedcoopSearchWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,7 @@ LoggedDuckDuckGoSearch = create_logged_tool(DuckDuckGoSearchResults)
 LoggedBraveSearch = create_logged_tool(BraveSearch)
 LoggedArxivSearch = create_logged_tool(ArxivQueryRun)
 LoggedWikipediaSearch = create_logged_tool(WikipediaQueryRun)
+LoggedFeedcoopSearch = create_logged_tool(FeedcoopSearch)
 
 
 def get_search_config():
@@ -85,9 +88,7 @@ def get_web_search_tool(max_search_results: int):
         )
     elif SELECTED_SEARCH_ENGINE == SearchEngine.WIKIPEDIA.value:
         wiki_lang = search_config.get("wikipedia_lang", "en")
-        wiki_doc_content_chars_max = search_config.get(
-            "wikipedia_doc_content_chars_max", 4000
-        )
+        wiki_doc_content_chars_max = search_config.get("wikipedia_doc_content_chars_max", 4000)
         return LoggedWikipediaSearch(
             name="web_search",
             api_wrapper=WikipediaAPIWrapper(
@@ -95,6 +96,14 @@ def get_web_search_tool(max_search_results: int):
                 top_k_results=max_search_results,
                 load_all_available_meta=True,
                 doc_content_chars_max=wiki_doc_content_chars_max,
+            ),
+        )
+    elif SELECTED_SEARCH_ENGINE == SearchEngine.FEEDCOOP.value:
+        return LoggedFeedcoopSearch(
+            name="web_search",
+            search_wrapper=FeedcoopSearchWrapper(
+                api_key=os.getenv("FEEDCOOP_API_KEY", ""),
+                search_kwargs={"Count": max_search_results},
             ),
         )
     else:
