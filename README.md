@@ -166,10 +166,14 @@ DeerFlow supports multiple search engines that can be configured in your `.env` 
   - No API key required
   - Specialized for scientific and academic papers
 
+- **Feedcoop Search**: 
+   - Requires `FEEDCOOP_SEARCH_API_KEY` in your `.env` file
+   - supported by volcengine
+
 To configure your preferred search engine, set the `SEARCH_API` variable in your `.env` file:
 
 ```bash
-# Choose one: tavily, duckduckgo, brave_search, arxiv
+# Choose one: tavily, duckduckgo, brave_search, arxiv, feedcoop
 SEARCH_API=tavily
 ```
 

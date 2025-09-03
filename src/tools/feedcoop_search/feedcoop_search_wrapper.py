@@ -1,9 +1,9 @@
 import json
 import os
-from typing import List, Optional, Literal
-from langchain_core.documents import Document
+from typing import List, Literal, Optional
 
 import requests
+from langchain_core.documents import Document
 from pydantic import BaseModel, Field
 
 
@@ -23,7 +23,9 @@ class FeedcoopSearchResponse(BaseModel):
         snippet: str = Field(alias="Snippet")
         summary: Optional[str] = Field(alias="Summary")
         content: Optional[str] = Field(alias="Content")
-        publish_time: Optional[str] = Field(alias="PublishTime", description="like `2025-05-30T19:35:24+08:00`")
+        publish_time: Optional[str] = Field(
+            alias="PublishTime", description="like `2025-05-30T19:35:24+08:00`"
+        )
         logo_url: Optional[str] = Field(alias="LogoUrl")
         rank_score: Optional[float] = Field(alias="RankScore")
         auth_info_des: str = Field(alias="AuthInfoDes")
@@ -35,8 +37,12 @@ class FeedcoopSearchResponse(BaseModel):
 
 
 class FeedcoopSearchAdditionalParams(BaseModel):
-    search_type: Literal["web", "web_summary"] = Field(alias="SearchType", default="web")
-    count: int = Field(alias="Count", default=10, description="number of search items, the max is 50")
+    search_type: Literal["web", "web_summary"] = Field(
+        alias="SearchType", default="web"
+    )
+    count: int = Field(
+        alias="Count", default=10, description="number of search items, the max is 50"
+    )
     filter: Optional["Filter"] = Field(alias="Filter", default=None)
     need_summary: bool = Field(alias="NeedSummary", default=False)
     time_range: str = Field(
@@ -46,9 +52,15 @@ class FeedcoopSearchAdditionalParams(BaseModel):
     )
 
     class Filter(BaseModel):
-        need_content: bool = Field(alias="NeedContent", default=False, description="only return results with body text")
+        need_content: bool = Field(
+            alias="NeedContent",
+            default=False,
+            description="only return results with body text",
+        )
         need_url: bool = Field(
-            alias="NeedUrl", default=False, description="only return the results of the original link"
+            alias="NeedUrl",
+            default=False,
+            description="only return the results of the original link",
         )
         sites: str = Field(
             alias="Sites",
@@ -81,7 +93,10 @@ class FeedcoopSearchWrapper(BaseModel):
         return final_response.model_dump_json()
 
     def _search_request(self, query: str) -> dict:
-        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
         req = requests.PreparedRequest()
         body = {**self.search_kwargs.model_dump(by_alias=True), **{"Query": query}}
         req.prepare_url(self.base_url, {})
@@ -95,17 +110,8 @@ class FeedcoopSearchWrapper(BaseModel):
         if "Error" in response_json["ResponseMetadata"]:
             error_code = response_json["ResponseMetadata"]["Error"]["CodeN"]
             message = response_json["ResponseMetadata"]["Error"]["Message"]
-            raise Exception(f"API request failed, error code: {error_code}, message: {message}")
+            raise Exception(
+                f"API request failed, error code: {error_code}, message: {message}"
+            )
 
         return response_json
-
-
-if __name__ == "__main__":
-    import os
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
-    api_key = os.getenv("FEEDCOOP_API_KEY", "")
-    result = FeedcoopSearchWrapper(api_key=api_key, search_kwargs={"Count": 1}).run("北京有什么好玩的")
-    print(result)
