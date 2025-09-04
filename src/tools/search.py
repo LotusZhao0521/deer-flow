@@ -19,11 +19,11 @@ from langchain_community.utilities import (
 
 from src.config import SELECTED_SEARCH_ENGINE, SearchEngine, load_yaml_config
 from src.tools.decorators import create_logged_tool
+from src.tools.feedcoop_search.feedcoop_search_results import FeedcoopSearch
+from src.tools.feedcoop_search.feedcoop_search_wrapper import FeedcoopSearchWrapper
 from src.tools.tavily_search.tavily_search_results_with_images import (
     TavilySearchWithImages,
 )
-from src.tools.feedcoop_search.feedcoop_search_results import FeedcoopSearch
-from src.tools.feedcoop_search.feedcoop_search_wrapper import FeedcoopSearchWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +88,9 @@ def get_web_search_tool(max_search_results: int):
         )
     elif SELECTED_SEARCH_ENGINE == SearchEngine.WIKIPEDIA.value:
         wiki_lang = search_config.get("wikipedia_lang", "en")
-        wiki_doc_content_chars_max = search_config.get("wikipedia_doc_content_chars_max", 4000)
+        wiki_doc_content_chars_max = search_config.get(
+            "wikipedia_doc_content_chars_max", 4000
+        )
         return LoggedWikipediaSearch(
             name="web_search",
             api_wrapper=WikipediaAPIWrapper(

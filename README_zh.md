@@ -160,10 +160,14 @@ DeerFlow 支持多种搜索引擎，可以在`.env`文件中通过`SEARCH_API`�
   - 无需 API 密钥
   - 专为科学和学术论文设计
 
+- **Feedcoop Search**: 
+   - 需要在`.env`文件中设置`FEEDCOOP_SEARCH_API_KEY`
+   - 服务支持: 火山邀请
+
 要配置您首选的搜索引擎，请在`.env`文件中设置`SEARCH_API`变量：
 
 ```bash
-# 选择一个：tavily, duckduckgo, brave_search, arxiv
+# 选择一个：tavily, duckduckgo, brave_search, arxiv, feedcoop
 SEARCH_API=tavily
 ```
 

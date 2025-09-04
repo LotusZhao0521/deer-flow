@@ -1,16 +1,15 @@
 """Tool for Feedcoop search API."""
 
-from typing import Optional, Any
+import logging
+from typing import Any, Optional
 
 from langchain_core.callbacks import CallbackManagerForToolRun
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel
 
-from .feedcoop_search_wrapper import FeedcoopSearchWrapper, FeedcoopSearchResponse
+from .feedcoop_search_wrapper import FeedcoopSearchResponse, FeedcoopSearchWrapper
 
-
-class FeedcoopSearchInput(BaseModel):
-    """Input for the Feedcoop Search tool."""
+logger = logging.getLogger(__name__)
 
 
 class FeedcoopSearch(BaseTool):  # type: ignore[override]
@@ -24,7 +23,9 @@ class FeedcoopSearch(BaseTool):  # type: ignore[override]
     search_wrapper: FeedcoopSearchWrapper
 
     @classmethod
-    def from_api_key(cls, api_key: str, search_kwargs: Optional[dict] = None, **kwargs: Any) -> "FeedcoopSearch":
+    def from_api_key(
+        cls, api_key: str, search_kwargs: Optional[dict] = None, **kwargs: Any
+    ) -> "FeedcoopSearch":
         """Create a tool from an api key.
 
         Args:
