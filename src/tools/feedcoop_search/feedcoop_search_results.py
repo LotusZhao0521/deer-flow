@@ -16,13 +16,14 @@ class FeedcoopSearch(BaseTool):  # type: ignore[override]
     """Tool that searches the Feedcoop search API."""
 
     name: str = "feedcoop_search"
-    description: str = (
-        "a search engine by volcengine. useful for when you need to supplementary knowledge or factual basis. "
-    )
+    description: str = "a search engine by volcengine. useful for when you need to supplementary knowledge or factual basis. "
 
     search_wrapper: FeedcoopSearchWrapper
 
     @classmethod
+    def from_api_key(
+        cls, api_key: str, search_kwargs: Optional[dict] = None, **kwargs: Any
+    ) -> "FeedcoopSearch":
     def from_api_key(
         cls, api_key: str, search_kwargs: Optional[dict] = None, **kwargs: Any
     ) -> "FeedcoopSearch":
